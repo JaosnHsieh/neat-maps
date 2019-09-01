@@ -10,7 +10,15 @@
     "dev:client": "parcel ./client/index.html --open",
     "lint": "./node_modules/.bin/eslint ./",
     "lint:debug": "./node_modules/.bin/eslint --debug ./",
-    "test": "jest"
+    "test": "jest",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "**/*.js": [
+      "eslint",
+      "prettier --trailing-comma all --single-quote --write",
+      "git add"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
