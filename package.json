@@ -8,14 +8,18 @@
   "private": false,
   "scripts": {
     "dev:client": "parcel ./client/index.html --open",
+    "lint": "./node_modules/.bin/eslint ./",
+    "lint:debug": "./node_modules/.bin/eslint --debug ./",
     "test": "jest"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "eslint": "^6.3.0",
+    "eslint-plugin-react": "^7.14.3",
     "husky": "^3.0.4",
     "jest": "^24.9.0",
     "lint-staged": "^9.2.5",
