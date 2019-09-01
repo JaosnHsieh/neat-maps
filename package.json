@@ -10,8 +10,7 @@
     "dev:client": "parcel ./client/index.html --open",
     "lint": "./node_modules/.bin/eslint ./",
     "lint:debug": "./node_modules/.bin/eslint --debug ./",
-    "test": "jest",
-    "precommit": "lint-staged"
+    "test": "jest"
   },
   "lint-staged": {
     "**/*.js": [
@@ -41,5 +40,10 @@
     "@testing-library/react": "^9.1.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
