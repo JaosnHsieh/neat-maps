@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Auth from './Auth';
 
 const App = () => {
-  return <div />;
+  const [isAuthed, setIsAuthed] = useState(false);
+
+  if (!isAuthed) {
+    return <Auth setIsAuthed={setIsAuthed} isAuthed={isAuthed} />;
+  }
+
+  return <div>logined</div>;
 };
 
 export default App;
