@@ -9,9 +9,11 @@ server.use(morgan('dev'));
 server.use(
   cors({
     origin: function(origin, callback) {
-      process.env.NODE_ENV === 'dev' ? callback(null, true) : callback(new Error('Not Allowed'));
+      process.env.NODE_ENV === 'production'
+        ? callback(new Error('Not Allowed'))
+        : callback(null, true);
     },
-    credentials: process.env.NODE_ENV === 'dev' ? true : false,
+    credentials: process.env.NODE_ENV === 'production' ? false : true,
   }),
 );
 server.use(bodyParser.urlencoded({ extended: false }));

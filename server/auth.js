@@ -4,18 +4,19 @@ const qs = require('querystring');
 const debug = require('debug')('neat-maps:server:auth.js');
 
 function auth(server) {
-  server.use(
-    cookieSession({
-      name: 'session',
-      keys: ['randomkey'],
-    }),
-  );
+  if (process.env.NODE_ENV !== 'test') {
+    server.use(
+      cookieSession({
+        name: 'session',
+        keys: ['randomkey'],
+      }),
+    );
+  }
   server.get('/isAuthed', (req, res) => {
-    debug('GET /isAuthed req.session.user', req.session.user);
     if (req.session.user) {
       return res.json(req.session.user);
     }
-    return res.status(400).send('failed');
+    return res.status(401).send('Unauthorized');
   });
 
   server.post('/login', async (req, res, next) => {
@@ -31,7 +32,7 @@ function auth(server) {
       debug('fetchResponse', fetchResponse);
 
       if (!fetchResponse.ok) {
-        return res.status(400).send('failed');
+        return res.status(404).send('Not found');
       }
 
       const userData = await fetchResponse.json();
