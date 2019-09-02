@@ -1,7 +1,7 @@
-const fileApi = require('./file');
+const { fileRouter } = require('./file');
 
 function api(server) {
-  server.use('/api/v1/files', fileApi);
+  server.use('/api/v1/files', fileRouter);
 }
 
 module.exports = api;

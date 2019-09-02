@@ -8,12 +8,13 @@
   "private": false,
   "scripts": {
     "dev:client": "NODE_ENV=dev parcel ./client/index.html --open",
+    "build:client": "rm -rf ./dist && NODE_ENV=production parcel ./client/index.html build",
     "dev:server": "DEBUG=neat-maps* NODE_ENV=dev nodemon index.js",
     "lint": "./node_modules/.bin/eslint ./",
     "lint:debug": "./node_modules/.bin/eslint --debug ./",
     "test:client": "jest --config=client/jest.config.js --watch",
     "test:server": "jest --config=server/jest.config.js --watch",
-    "test": "jest --config=client/jest.config.js --passWithNoTests && jest --config=server/jest.config.js --passWithNoTests"
+    "test": "jest --config=client/jest.config.js --passWithNoTests --silent && jest --config=server/jest.config.js --passWithNoTests --silent"
   },
   "lint-staged": {
     "**/*.js": [
@@ -37,6 +38,7 @@
     "parcel": "^1.12.3",
     "prettier": "^1.18.2",
     "react-testing-library": "^8.0.1",
+    "rimraf": "^3.0.0",
     "supertest": "^4.0.2",
     "supertest-session": "^4.0.0"
   },
@@ -49,7 +51,9 @@
     "cors": "^2.8.5",
     "debug": "^4.1.1",
     "express": "^4.17.1",
+    "formidable": "^1.2.1",
     "isomorphic-unfetch": "^3.0.0",
+    "lodash": "^4.17.15",
     "morgan": "^1.9.1",
     "prop-types": "^15.7.2",
     "querystring": "^0.2.0",
