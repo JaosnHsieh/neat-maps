@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import propTypes from 'prop-types';
+import fetch from 'isomorphic-unfetch';
 import { postData, API_URL } from './utils';
 
 const Auth = ({ isAuthed, setIsAuthed }) => {

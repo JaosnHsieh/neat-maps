@@ -14,4 +14,5 @@ export const postData = (url = '', data = {}) =>
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
 
-export const API_URL = process.env.NODE_ENV === 'dev' ? 'http://localhost:3000' : '';
+export const API_URL =
+  process.env.NODE_ENV === 'production' ? process.env.SERVER_URL : 'http://localhost:3000';
