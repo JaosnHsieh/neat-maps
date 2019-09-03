@@ -25,6 +25,7 @@ server.use(
         ? callback(new Error('Not Allowed'))
         : callback(null, true);
     },
+    //disable cors on production
     credentials: process.env.NODE_ENV === 'production' ? false : true,
   }),
 );
