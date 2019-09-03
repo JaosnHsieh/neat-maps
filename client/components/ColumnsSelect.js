@@ -22,7 +22,7 @@ const ColumnsOptions = ({ value, onColumnChange }) => (
       onColumnChange(e.target.value);
     }}
   >
-    <option hidden>Choose Column</option>
+    <option hidden></option>
     {availableColumns.map((columnText, i) => (
       <option value={columnText} key={i}>
         {columnText}

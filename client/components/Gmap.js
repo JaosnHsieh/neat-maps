@@ -1,47 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class Gmap extends React.PureComponent {
+const wait = (milliseconds = 500) =>
+  new window.Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, milliseconds);
+  });
+class Gmap extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isInitMap: false,
+    };
+  }
   shouldComponentUpdate(nextProps) {
-    this.addMarkersByAddress(nextProps.addresses || []);
+    if (this.state.isInitMap) {
+      this.addMarkersByAddress(nextProps.addresses);
+    }
     return false;
   }
   componentDidMount() {
-    window.initMap = function initMap() {
-      //   var geocoder;
-      //   var address = 'new york city';
-      //   var map = new google.maps.Map(document.getElementById('map'), {
-      //     zoom: 3,
-      //     center: { lat: -34.397, lng: 150.644 },
-      //   });
-      //   this.map = map;
-      //   geocoder = new google.maps.Geocoder();
-      //   codeAddress(geocoder, map);
-      //   function codeAddress(geocoder, map) {
-      //     geocoder.geocode({ address: address }, function(results, status) {
-      //       if (status === 'OK') {
-      //         map.setCenter(results[0].geometry.location);
-      //         var marker = new google.maps.Marker({
-      //           map: map,
-      //           position: results[0].geometry.location,
-      //         });
-      //       } else {
-      //         alert('Geocode was not successful for the following reason: ' + status);
-      //       }
-      //     });
-      //   }
-    };
     const script = document.createElement('script');
     const googleMapApiKey = process.env.GOOGLE_MAP_API_KEY || '';
     script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapApiKey}&callback=initMap`;
-    script.async = true;
+    script.async = false;
 
     document.body.appendChild(script);
+
+    window.initMap = () => {
+      var map = new window.google.maps.Map(document.getElementById('map'), {
+        zoom: 3,
+        center: { lat: -34.397, lng: 150.644 },
+      });
+      this.setState({ isInitMap: true });
+      this.map = map;
+    };
   }
-  addMarkersByAddress(addresses = []) {
+  async addMarkersByAddress(addresses = []) {
     const geocoder = new window.google.maps.Geocoder();
-    addresses.map(address => {
-      geocoder.geocode({ address: address }, function(results, status) {
+    // wait coz google map default geocoder api quota per second
+    for (let address of addresses) {
+      await wait();
+      geocoder.geocode({ address: address }, (results, status) => {
         if (status === 'OK') {
           //   this.map.setCenter(results[0].geometry.location);
           //   var marker =
@@ -49,15 +50,16 @@ class Gmap extends React.PureComponent {
             map: this.map,
             position: results[0].geometry.location,
           });
+          this.map && this.map.setCenter(results[0].geometry.location);
         } else {
           alert('Geocode was not successful for the following reason: ' + status);
         }
       });
-    });
+    }
   }
 
   render() {
-    return <div id="map" style={{ width: '500px', height: '500px' }}></div>;
+    return <div id="map" style={{ width: '100%', height: '500px' }}></div>;
   }
 }
 
