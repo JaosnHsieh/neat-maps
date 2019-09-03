@@ -14,5 +14,33 @@ export const postData = (url = '', data = {}) =>
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
 
-export const API_URL =
+export const SERVER_URL =
   process.env.NODE_ENV === 'production' ? process.env.SERVER_URL : 'http://localhost:3000';
+
+/**
+ * csvText.split(',') will encounter bug when cellText like "123, USA" so get sophisticated csv parser function from the link
+ * CSVtoArray
+ * https://stackoverflow.com/a/41563966/6414615
+ */
+export const csvToArray = text => {
+  let p = '',
+    row = [''],
+    ret = [row],
+    i = 0,
+    r = 0,
+    s = !0,
+    l;
+  for (l of text) {
+    if ('"' === l) {
+      if (s && l === p) row[i] += l;
+      s = !s;
+    } else if (',' === l && s) l = row[++i] = '';
+    else if ('\n' === l && s) {
+      if ('\r' === p) row[i] = row[i].slice(0, -1);
+      row = ret[++r] = [(l = '')];
+      i = 0;
+    } else row[i] += l;
+    p = l;
+  }
+  return ret;
+};

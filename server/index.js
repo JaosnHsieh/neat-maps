@@ -1,4 +1,5 @@
 const server = require('express')();
+const cookieSession = require('cookie-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -6,6 +7,14 @@ const auth = require('./auth');
 const api = require('./api');
 
 server.use(morgan('dev'));
+if (process.env.NODE_ENV !== 'test') {
+  server.use(
+    cookieSession({
+      name: 'session',
+      keys: ['randomkey'],
+    }),
+  );
+}
 server.use(
   cors({
     origin: function(origin, callback) {

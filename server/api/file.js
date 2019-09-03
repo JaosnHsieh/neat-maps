@@ -75,6 +75,13 @@ router.post('/', async (req, res, next) => {
   try {
     const userFilesDirPath = path.join('upload', req.userId);
     await createDirIfNotExists(userFilesDirPath);
+    const files = await fsReadDirPromise(userFilesDirPath);
+    //files number limit
+    if (files.length >= 3) {
+      return res.status(404).json({
+        message: 'file limit up to 3',
+      });
+    }
     // parse a file upload
     const form = new formidable.IncomingForm();
     form.multiples = false;
@@ -85,7 +92,7 @@ router.post('/', async (req, res, next) => {
       //rename the incoming file to the file's name
       file.path = path.join(form.uploadDir, file.name);
     });
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
       try {
         if (err) {
           debug('POST /files err', err);
@@ -93,6 +100,13 @@ router.post('/', async (req, res, next) => {
         }
         const file = _.get(files, 'file');
         debug('file.name', file.name);
+        // add first line as column line
+        const filePath = path.join('upload', req.userId, file.name);
+        const fileBuffer = await fsReadFilePromise(filePath);
+        const fileText = fileBuffer.toString();
+        const updatedFileText = replaceFirstLineText(fileText, ',,,,');
+        await fsWriteFilePromise(filePath, updatedFileText);
+
         return res.send(file.name);
       } catch (error) {
         return next(error);
@@ -110,6 +124,7 @@ router.put('/:filename', async (req, res, next) => {
     await createDirIfNotExists(userFilesDirPath);
     const { filename = '' } = req.params;
     const { columnLineText = '' } = req.body;
+    debug('PUT /files/:filename', filename, columnLineText);
     if (_.isEmpty(filename)) {
       return res.status(404).send('Not found');
     }
