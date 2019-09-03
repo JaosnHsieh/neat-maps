@@ -102,6 +102,7 @@ const Sheet = ({ setCompleteAddresses }) => {
       setIsLoading(false);
       const csvFileTextWithColumns = await response.text();
       const csvFileTextWithColumnsRows = csvFileTextWithColumns.split('\n');
+
       setCsvColumns(csvFileTextWithColumnsRows[0].split(','));
       setCsvText(csvFileTextWithColumnsRows.slice(1).join('\n'));
       // Array.from({ length: Math.max(...csvArray.map(r => r.length)) }, () => '');
@@ -117,7 +118,7 @@ const Sheet = ({ setCompleteAddresses }) => {
     const getCellText = (row = [], columnName = '') => row[csvColumns.indexOf(columnName) + 1];
 
     // only update completedAddresses when every address columns has been selected
-    if ([zipcode, state, city, address].every(c => csvColumns.includes(c))) {
+    if (!isDefaultSheet && [zipcode, state, city, address].every(c => csvColumns.includes(c))) {
       setCompleteAddresses(
         dataRows.map(
           row =>
@@ -127,20 +128,28 @@ const Sheet = ({ setCompleteAddresses }) => {
             )} ${getCellText(row, zipcode)}`,
         ),
       );
+    } else {
+      setCompleteAddresses([]);
     }
-  }, [csvColumns]);
+  }, [csvColumns, csvText]);
   const fileInput = (
     <input
       id="csvfile"
       type="file"
       onChange={async event => {
         const file = event.target.files[0];
-
+        if (!file) {
+          return;
+        }
         const reader = new FileReader();
         reader.onload = function(event) {
-          setCsvColumns(',,,,'.split(','));
-          setCsvText(event.target.result);
-          setFileName(file.name);
+          if (event.target.result.split('\n').length <= 20) {
+            setCsvColumns(',,,,'.split(','));
+            setCsvText(event.target.result);
+            setFileName(file.name);
+          } else {
+            alert('CSV file rows up to 20');
+          }
         };
 
         reader.readAsText(file);
@@ -182,7 +191,7 @@ const Sheet = ({ setCompleteAddresses }) => {
   );
   const toolBar = (
     <>
-      <span>select csv file {fileInput}</span>
+      {!isDefaultSheet && <span>select csv file {fileInput}</span>}
       <div style={{ height: '25px', padding: '10px' }}>
         {!isDefaultSheet && isSaving && <div style={{ float: 'right' }}>Saving</div>}
         {!isDefaultSheet && isLoading && <div style={{ float: 'right' }}>Loading</div>}
@@ -204,9 +213,9 @@ const Sheet = ({ setCompleteAddresses }) => {
     </>
   );
   return (
-    <>
+    <div style={{ width: '100%' }}>
       {toolBar}
-      <div style={{ height: '100%', position: 'relative' }}>
+      <div style={{ position: 'relative' }}>
         <style>
           {`
           table {
@@ -221,7 +230,7 @@ const Sheet = ({ setCompleteAddresses }) => {
           }
           td div {
             text-align: right;
-            width: 120px;
+            width: 80px;
             min-height: 1.2em;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -275,11 +284,14 @@ const Sheet = ({ setCompleteAddresses }) => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };
 
 Sheet.propTypes = {
   setCompleteAddresses: PropTypes.func,
+};
+Sheet.defaultProps = {
+  setCompleteAddresses: () => {},
 };
 export default Sheet;

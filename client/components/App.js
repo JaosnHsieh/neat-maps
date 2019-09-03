@@ -7,16 +7,12 @@ import { postData, SERVER_URL } from './utils';
 const App = () => {
   const [isAuthed, setIsAuthed] = useState(false);
   const [completeAddresses, setCompleteAddresses] = useState([]);
-  //TODO
-  console.log('completeAddresses', completeAddresses);
   if (!isAuthed) {
     return <Auth setIsAuthed={setIsAuthed} isAuthed={isAuthed} />;
   }
-
   return (
     <div>
       <button
-        style={{ float: 'right' }}
         onClick={() => {
           postData(`${SERVER_URL}/logout`).then(() => {
             location.reload();
@@ -25,8 +21,14 @@ const App = () => {
       >
         logout
       </button>
-      <Sheet setCompleteAddresses={setCompleteAddresses} />
-      <Gmap />
+      <div style={{ display: 'flex' }}>
+        <div style={{ flex: 1, height: '500px', margin: '5px', overflow: 'scroll' }}>
+          <Sheet setCompleteAddresses={setCompleteAddresses} />
+        </div>
+        <div style={{ flex: 1, height: '500px', margin: '5px', overflow: 'scroll' }}>
+          <Gmap addresses={completeAddresses} />
+        </div>
+      </div>
     </div>
   );
 };

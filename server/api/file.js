@@ -11,6 +11,8 @@ const fsMkdirPromise = promisify(fs.mkdir);
 const fsReadDirPromise = promisify(fs.readdir);
 const fsReadFilePromise = promisify(fs.readFile);
 const fsWriteFilePromise = promisify(fs.writeFile);
+const fsStatPromise = promisify(fs.stat);
+const fsUnlinkPromise = promisify(fs.unlink);
 
 const uploadDirPath = process.env.UPLOAD_DIR_PATH || 'upload';
 
@@ -76,11 +78,20 @@ router.post('/', async (req, res, next) => {
     const userFilesDirPath = path.join('upload', req.userId);
     await createDirIfNotExists(userFilesDirPath);
     const files = await fsReadDirPromise(userFilesDirPath);
-    //files number limit
+    //files number limit, delete oldest file
     if (files.length >= 3) {
-      return res.status(404).json({
-        message: 'file limit up to 3',
-      });
+      let curFileMtime = Number.MAX_SAFE_INTEGER;
+      let oldestFilePath;
+      for (let f of files) {
+        const stat = await fsStatPromise(path.join(userFilesDirPath, f));
+        if (stat.mtime.valueOf() < curFileMtime) {
+          curFileMtime = stat.mtime.valueOf();
+          debug(`${path.join(userFilesDirPath, f)} curFileMtime`, curFileMtime);
+          oldestFilePath = path.join(userFilesDirPath, f);
+        }
+      }
+      debug('oldestFilePath', oldestFilePath);
+      await fsUnlinkPromise(oldestFilePath);
     }
     // parse a file upload
     const form = new formidable.IncomingForm();
