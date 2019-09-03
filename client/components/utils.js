@@ -14,8 +14,14 @@ export const postData = (url = '', data = {}) =>
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
 
+/**
+ * fetch needs absolute URL
+ * Error: only absolute urls are supported
+ */
 export const SERVER_URL =
-  process.env.NODE_ENV === 'production' ? process.env.SERVER_URL : 'http://localhost:3000';
+  process.env.NODE_ENV === 'production'
+    ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}`
+    : 'http://localhost:3000';
 
 /**
  * csvText.split(',') will encounter bug when cellText like "123, USA" so get sophisticated csv parser function from the link
