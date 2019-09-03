@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import propTypes from 'prop-types';
 import fetch from 'isomorphic-unfetch';
-import { postData, API_URL } from './utils';
+import { postData, SERVER_URL } from './utils';
 
 const Auth = ({ isAuthed, setIsAuthed }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('jasontest@email.com');
+  const [password, setPassword] = useState('12345');
 
   useEffect(() => {
     const checkIsLogin = async () => {
       try {
-        const fetchResponse = await fetch(`${API_URL}/isAuthed`, {
+        const fetchResponse = await fetch(`${SERVER_URL}/isAuthed`, {
           credentials: 'include',
         });
         setIsChecking(false);
@@ -26,7 +27,9 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
 
   const login = async () => {
     try {
-      const fetchResponse = await postData(`${API_URL}/login`, { email, password });
+      setIsLoading(true);
+      const fetchResponse = await postData(`${SERVER_URL}/login`, { email, password });
+      setIsLoading(false);
       setIsAuthed(fetchResponse.ok);
     } catch (err) {
       console.log(err);
@@ -58,6 +61,7 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
             ></input>
           </div>
           <button type="submit">Submit</button>
+          {isLoading && <div>loading...</div>}
         </form>
       </div>
     );

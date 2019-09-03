@@ -1,20 +1,13 @@
-const cookieSession = require('cookie-session');
+const _ = require('lodash');
+
 const fetch = require('isomorphic-unfetch');
 const qs = require('querystring');
 const debug = require('debug')('neat-maps:server:auth.js');
 
 function auth(server) {
-  if (process.env.NODE_ENV !== 'test') {
-    server.use(
-      cookieSession({
-        name: 'session',
-        keys: ['randomkey'],
-      }),
-    );
-  }
   server.get('/isAuthed', (req, res) => {
-    if (req.session.user) {
-      return res.json(req.session.user);
+    if (_.has(req, 'session.user.id')) {
+      return res.status(200).send('OK');
     }
     return res.status(401).send('Unauthorized');
   });
@@ -36,9 +29,19 @@ function auth(server) {
       }
 
       const userData = await fetchResponse.json();
+
       // eslint-disable-next-line require-atomic-updates
-      req.session.user = userData;
+      req.session.user = { id: _.get(userData, 'id') };
       return res.json(userData);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  server.post('/logout', async (req, res, next) => {
+    try {
+      delete req.session.user;
+      return res.redirect('/');
     } catch (err) {
       next(err);
     }

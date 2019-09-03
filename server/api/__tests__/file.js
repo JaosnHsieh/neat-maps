@@ -53,7 +53,7 @@ describe('/files API endpoint ', () => {
       `/api/v1/files/${testFileName}`,
     );
 
-    expect(response2.text).toBe(fs.readFileSync(path.join(__dirname, testFileName)).toString());
+    expect(response2.text).toEqual(expect.stringContaining('testfile'));
   });
 
   test('PUT /api/v1/files should response status code 200', async () => {
