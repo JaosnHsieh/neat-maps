@@ -1,0 +1,12 @@
+version: '3.2'
+services:
+  neat-maps:
+    build: .
+    ports:
+      - '3000:3000'
+    restart: always
+    environment:
+      PORT: 3000
+      uploadDirPath: upload
+      GOOGLE_MAP_API_KEY: your-google-api-key-with-Geocoding API-and-Maps JavaScript API-enabled
+    command: node index.js

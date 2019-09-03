@@ -1,11 +1,14 @@
-const server = require('express')();
+const express = require('express');
 const cookieSession = require('cookie-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const path = require('path');
 const auth = require('./auth');
 const api = require('./api');
+const server = express();
 
+server.use(express.static(path.join(__dirname, 'build')));
 server.use(morgan('dev'));
 if (process.env.NODE_ENV !== 'test') {
   server.use(
@@ -22,6 +25,7 @@ server.use(
         ? callback(new Error('Not Allowed'))
         : callback(null, true);
     },
+    //disable cors on production
     credentials: process.env.NODE_ENV === 'production' ? false : true,
   }),
 );

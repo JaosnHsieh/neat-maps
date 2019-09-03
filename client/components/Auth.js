@@ -4,10 +4,11 @@ import fetch from 'isomorphic-unfetch';
 import { postData, SERVER_URL } from './utils';
 
 const Auth = ({ isAuthed, setIsAuthed }) => {
+  const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
-  const [email, setEmail] = useState('jasontest@email.com');
-  const [password, setPassword] = useState('12345');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     const checkIsLogin = async () => {
@@ -30,8 +31,11 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
       setIsLoading(true);
       const fetchResponse = await postData(`${SERVER_URL}/login`, { email, password });
       setIsLoading(false);
+      setIsError(!fetchResponse.ok);
       setIsAuthed(fetchResponse.ok);
     } catch (err) {
+      setIsLoading(false);
+      setIsError(true);
       console.log(err);
     }
   };
@@ -41,10 +45,15 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
         <form
           onSubmit={async e => {
             e.preventDefault();
+            setIsError(false);
             await login();
           }}
         >
           <div>
+            <div>
+              neat maps auth by{' '}
+              <a href="https://neat-api-docs.herokuapp.com/#authentication">api</a>
+            </div>
             <input
               value={email}
               onChange={e => {
@@ -54,14 +63,18 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
           </div>
           <div>
             <input
+              type="password"
               value={password}
               onChange={e => {
                 setPassword(e.target.value);
               }}
             ></input>
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={isLoading}>
+            Submit
+          </button>
           {isLoading && <div>loading...</div>}
+          {isError && <div>error...</div>}
         </form>
       </div>
     );

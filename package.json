@@ -2,13 +2,17 @@
   "name": "neat-maps",
   "version": "1.0.0",
   "main": "index.js",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "repository": "git@github.com:JaosnHsieh/neat-maps.git",
   "author": "JaosnH <appleoxxo@gmail.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev:client": "NODE_ENV=dev parcel ./client/index.html --open",
-    "build:client": "rm -rf ./dist && NODE_ENV=production parcel ./client/index.html build",
+    "build": "rm -rf ./dist && ./node_modules/.bin/parcel build ./client/index.html --out-dir server/build",
+    "start": "NODE_ENV=production && node index.js",
+    "dev:client": "rm -rf ./.cache && ./node_modules/.bin/parcel ./client/index.html --open",
     "dev:server": "DEBUG=neat-maps* NODE_ENV=dev nodemon index.js",
     "lint": "./node_modules/.bin/eslint ./",
     "lint:debug": "./node_modules/.bin/eslint --debug ./",
