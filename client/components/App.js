@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Auth from './Auth';
 import Sheet from './Sheet';
+import Gmap from './Gmap';
 import { postData, SERVER_URL } from './utils';
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
         logout
       </button>
       <Sheet setCompleteAddresses={setCompleteAddresses} />
+      <Gmap />
     </div>
   );
 };
