@@ -8,7 +8,9 @@ describe('/isAuthed API endpoint ', () => {
   });
 
   test('should response status code 200 after login', async () => {
-    const response = await request(global.mockSessionUser(server, {})).get('/isAuthed');
+    const response = await request(global.mockSessionUser(server, { id: 'testuserid' })).get(
+      '/isAuthed',
+    );
     expect(response.statusCode).toBe(200);
   });
 });

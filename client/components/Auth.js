@@ -42,40 +42,87 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
   if (!isChecking && !isAuthed) {
     return (
       <div>
-        <form
-          onSubmit={async e => {
-            e.preventDefault();
-            setIsError(false);
-            await login();
-          }}
-        >
-          <div>
+        <div style={{ marginTop: '80px', marginBottom: '80px' }}>
+          <form
+            onSubmit={async e => {
+              e.preventDefault();
+              setIsError(false);
+              await login();
+            }}
+            style={{
+              maxWidth: '380px',
+              padding: '15px 35px 45px',
+              margin: '0 auto',
+              backgroundColor: '#fff',
+              border: '1px solid rgba(0,0,0,0.1)',
+            }}
+          >
+            <h2>neat maps</h2>
             <div>
-              neat maps auth by{' '}
-              <a href="https://neat-api-docs.herokuapp.com/#authentication">api</a>
+              auth by <a href="https://neat-api-docs.herokuapp.com/#authentication">api</a>
             </div>
+
             <input
+              type="text"
+              style={{
+                position: 'relative',
+                fontSize: '16px',
+                height: 'auto',
+                padding: '10px',
+                WebkitBoxSizing: 'border-box',
+                MozBoxSizing: 'border-box',
+                boxSizing: 'border-box',
+                width: '100%',
+                marginTop: '10px',
+              }}
+              name="email"
+              placeholder="Email Address"
+              autoFocus
+              id="email"
               value={email}
               onChange={e => {
                 setEmail(e.target.value);
               }}
-            ></input>
-          </div>
-          <div>
+            />
             <input
               type="password"
+              style={{
+                position: 'relative',
+                fontSize: '16px',
+                height: 'auto',
+                padding: '10px',
+                WebkitBoxSizing: 'border-box',
+                MozBoxSizing: 'border-box',
+                boxSizing: 'border-box',
+                width: '100%',
+              }}
+              id="password"
               value={password}
               onChange={e => {
                 setPassword(e.target.value);
               }}
-            ></input>
-          </div>
-          <button type="submit" disabled={isLoading}>
-            Submit
-          </button>
-          {isLoading && <div>loading...</div>}
-          {isError && <div>error...</div>}
-        </form>
+              name="password"
+              placeholder="Password"
+            />
+            <div>
+              <button
+                type="submit"
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  padding: '10px 16px',
+                  fontSize: '18px',
+                  marginTop: '10px',
+                  lineHeight: '1.33',
+                }}
+              >
+                Login
+              </button>
+            </div>
+            {isLoading && <div>loading...</div>}
+            {isError && <div>error...</div>}
+          </form>
+        </div>
       </div>
     );
   }
