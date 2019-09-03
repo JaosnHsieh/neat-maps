@@ -21,9 +21,7 @@ if (process.env.NODE_ENV !== 'test') {
 server.use(
   cors({
     origin: function(origin, callback) {
-      process.env.NODE_ENV === 'production'
-        ? callback(new Error('Not Allowed'))
-        : callback(null, true);
+      callback(null, true);
     },
     //disable cors on production
     credentials: process.env.NODE_ENV === 'production' ? false : true,

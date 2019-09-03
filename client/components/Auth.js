@@ -6,7 +6,7 @@ import { postData, SERVER_URL } from './utils';
 const Auth = ({ isAuthed, setIsAuthed }) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
+  const [isChecking, setIsChecking] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -17,9 +17,9 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
           credentials: 'include',
         });
         setIsChecking(false);
-
         setIsAuthed(fetchResponse.ok);
       } catch (err) {
+        setIsError(true);
         console.log(err);
       }
     };

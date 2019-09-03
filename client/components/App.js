@@ -14,7 +14,7 @@ const App = () => {
     <div>
       <button
         onClick={() => {
-          postData(`${SERVER_URL}/logout`).then(() => {
+          postData(`${SERVER_URL}/logout`).finally(() => {
             location.reload();
           });
         }}
