@@ -50,6 +50,10 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
           }}
         >
           <div>
+            <div>
+              neat maps auth by{' '}
+              <a href="https://neat-api-docs.herokuapp.com/#authentication">api</a>
+            </div>
             <input
               value={email}
               onChange={e => {
