@@ -230,7 +230,7 @@ const Sheet = ({ setCompleteAddresses }) => {
           }
           td div {
             text-align: right;
-            width: 80px;
+            width: 100px;
             min-height: 1.2em;
             overflow: hidden;
             text-overflow: ellipsis;

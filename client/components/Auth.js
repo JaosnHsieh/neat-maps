@@ -7,8 +7,8 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
-  const [email, setEmail] = useState('jasontest@email.com');
-  const [password, setPassword] = useState('12345');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     const checkIsLogin = async () => {
@@ -59,6 +59,7 @@ const Auth = ({ isAuthed, setIsAuthed }) => {
           </div>
           <div>
             <input
+              type="password"
               value={password}
               onChange={e => {
                 setPassword(e.target.value);
